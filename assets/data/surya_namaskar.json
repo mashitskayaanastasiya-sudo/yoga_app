@@ -1,0 +1,98 @@
+[
+  {
+    "id": "asana_samasthiti",
+    "name_sanskrit": "Самастхити",
+    "name_russian": "Поза горы",
+    "image_url": "https://github.com/mashitskayaanastasiya-sudo/yoga-asans-assets/blob/main/Samasthiti.jpeg?raw=true",
+    "level": "все",
+    "skill": "базовые",
+    "contraindications": [],
+    "modifications": ["поставить стопы на ширине таза, если трудно держать вместе"],
+    "fact": "«Самастхити» означает «устойчивое равновесие». Поза символизирует стабильность и концентрацию.",
+    "technique": "Встаньте прямо, стопы вместе, макушка тянется вверх, ладони соединены у груди или вытянуты вдоль тела."
+  },
+  {
+    "id": "asana_urdhva_hastasana",
+    "name_sanskrit": "Урдхва Хастасана",
+    "name_russian": "Поза поднятых рук",
+    "image_url": "https://github.com/mashitskayaanastasiya-sudo/yoga-asans-assets/blob/main/Urdhva_hastasana.jpeg?raw=true",
+    "level": "все",
+    "skill": "базовые",
+    "contraindications": ["плечи"],
+    "modifications": ["держать руки параллельно вместо соединённых ладоней"],
+    "fact": "«Урдхва» — вверх, «Хаста» — руки. Эта поза символизирует обращение к солнцу.",
+    "technique": "Поднимите руки вверх, соедините ладони. Вытянитесь от стоп до макушки, плечи опущены."
+  },
+  {
+    "id": "asana_uttanasana",
+    "name_sanskrit": "Уттанасана",
+    "name_russian": "Наклон к ногам",
+    "image_url": "https://github.com/mashitskayaanastasiya-sudo/yoga-asans-assets/blob/main/Uttanasana.jpeg?raw=true",
+    "level": "все",
+    "skill": "наклоны",
+    "contraindications": ["спина", "давление"],
+    "modifications": ["слегка согнуть колени, если тянет задняя поверхность бедра"],
+    "fact": "«Уттана» переводится как «интенсивное растяжение». Эта поза помогает расслабить спину и ум.",
+    "technique": "Наклонитесь от таза, прижмите живот к бёдрам, руки на полу или обхватите голени."
+  },
+  {
+    "id": "asana_ardha_uttanasana",
+    "name_sanskrit": "Ардха Уттанасана",
+    "name_russian": "Половинка наклона",
+    "image_url": "https://github.com/mashitskayaanastasiya-sudo/yoga-asans-assets/blob/main/Ardha_uttanasana.jpeg?raw=true",
+    "level": "все",
+    "skill": "наклоны",
+    "contraindications": ["поясница"],
+    "modifications": ["ладони можно поставить на голени, если пол недоступен"],
+    "fact": "«Ардха» — половина. Асана используется как переход между позами.",
+    "technique": "На вдохе вытяните спину, ладони под плечами или на голенях. Макушка тянется вперёд."
+  },
+  {
+    "id": "asana_chaturanga_dandasana",
+    "name_sanskrit": "Чатуранга Дандасана",
+    "name_russian": "Посох на четырёх опорах",
+    "image_url": "https://github.com/mashitskayaanastasiya-sudo/yoga-asans-assets/blob/main/Chaturanga_dandasana.jpeg?raw=true",
+    "level": "продолжающий",
+    "skill": "силовые",
+    "contraindications": ["запястья", "плечи", "локти"],
+    "modifications": ["выполнять с коленей, сохраняя прямой корпус"],
+    "fact": "«Данда» — посох. Поза тренирует силу и выносливость, сохраняя тело прямым как палка.",
+    "technique": "Из планки согните руки под углом 90°, локти прижаты к корпусу, корпус параллелен полу."
+  },
+  {
+    "id": "asana_urdhva_mukha_svanasana",
+    "name_sanskrit": "Урдхва Мукха Шванасана",
+    "name_russian": "Собака мордой вверх",
+    "image_url": "https://github.com/mashitskayaanastasiya-sudo/yoga-asans-assets/blob/main/Urdhva_mukha_shvanasana.jpeg?raw=true",
+    "level": "начинающий",
+    "skill": "прогибы",
+    "contraindications": ["поясница", "грыжи"],
+    "modifications": ["заменить на Бхуджангасану (позу кобры), оставив бёдра на полу"],
+    "fact": "Эта асана символизирует открытость и пробуждение энергии.",
+    "technique": "Из положения лёжа выпрямите руки, грудь раскрыта вверх. Бёдра и колени не касаются пола."
+  },
+  {
+    "id": "asana_adho_mukha_svanasana",
+    "name_sanskrit": "Адхо Мукха Шванасана",
+    "name_russian": "Собака мордой вниз",
+    "image_url": "https://github.com/mashitskayaanastasiya-sudo/yoga-asans-assets/blob/main/Adha_mukha_shvanasana.jpeg?raw=true",
+    "level": "все",
+    "skill": "базовые",
+    "contraindications": ["плечи", "давление"],
+    "modifications": ["слегка согнуть колени или приподняться на носки"],
+    "fact": "Одна из самых известных асан йоги. Похожа на собаку, которая тянется после сна.",
+    "technique": "Из планки поднимите таз вверх, тело в форме перевёрнутой V, пятки тянутся к полу."
+  },
+  {
+    "id": "asana_samasthiti_namaste",
+    "name_sanskrit": "Самастхити Намасте",
+    "name_russian": "Поза горы (Намасте)",
+    "image_url": "https://github.com/mashitskayaanastasiya-sudo/yoga-asans-assets/blob/main/Samaskhiti_namaste.jpeg?raw=true",
+    "level": "все",
+    "skill": "базовые",
+    "contraindications": [],
+    "modifications": ["можно держать руки параллельно у груди, если трудно соединить ладони"],
+    "fact": "Завершение Сурья Намаскар — знак благодарности и почтения.",
+    "technique": "Встаньте прямо, ладони соединены у груди, глаза можно закрыть для внутренней концентрации."
+  }
+]
