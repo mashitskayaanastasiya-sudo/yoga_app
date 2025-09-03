@@ -5,10 +5,11 @@ class Asana {
   final String imageUrl;
   final String level;
   final String skill;
-  final List<dynamic> contraindications;
-  final List<dynamic> modifications;
+  final List<String> contraindications;
+  final List<String> modifications;
   final String fact;
   final String technique;
+  final String? limitations;
 
   Asana({
     required this.id,
@@ -21,6 +22,7 @@ class Asana {
     required this.modifications,
     required this.fact,
     required this.technique,
+    this.limitations,
   });
 
   factory Asana.fromJson(Map<String, dynamic> json) {
@@ -31,10 +33,17 @@ class Asana {
       imageUrl: json['image_url'] ?? '',
       level: json['level'] ?? '',
       skill: json['skill'] ?? '',
-      contraindications: List<String>.from(json['contraindications'] ?? []),
-      modifications: List<String>.from(json['modifications'] ?? []),
+      contraindications: (json['contraindications'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      modifications: (json['modifications'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       fact: json['fact'] ?? '',
       technique: json['technique'] ?? '',
+      limitations: json['limitations'], // может быть null
     );
   }
 }
