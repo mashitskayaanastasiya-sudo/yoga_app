@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'models/asana.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import 'quiz.dart';
 import 'dart:math';
 
 void main() {
@@ -49,8 +50,7 @@ class LandingPage extends StatelessWidget {
               const SizedBox(height: 100), // отступ сверху
               _buildMenuItem(context, "Обучение", const AsanaCardsScreen()),
               const SizedBox(height: 30),
-              _buildMenuItem(context, "Тест",
-                  const PlaceholderScreen(title: "Тест")),
+              _buildMenuItem(context, "Тест", const QuizScreen()),
               const SizedBox(height: 30),
               _buildMenuItem(context, "Конструктор практики",
                   const PlaceholderScreen(title: "Конструктор практики")),
