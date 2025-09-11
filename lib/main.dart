@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
-import 'models/asana.dart';
 import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
-import 'quiz.dart';
 import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'models/asana.dart';
 
 void main() {
   runApp(const YogaApp());
@@ -24,77 +23,9 @@ class YogaApp extends StatelessWidget {
     );
   }
 }
-
 /// ЛЕНДИНГ
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Фоновая картинка
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/landing.png',
-              fit: BoxFit.contain, // картинка целиком, по бокам белые поля
-              alignment: Alignment.center,
-            ),
-          ),
-          // Меню поверх картинки
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 100), // отступ сверху
-              _buildMenuItem(context, "Обучение", const AsanaCardsScreen()),
-              const SizedBox(height: 30),
-              _buildMenuItem(context, "Тест", const QuizScreen()),
-              const SizedBox(height: 30),
-              _buildMenuItem(context, "Конструктор практики",
-                  const PlaceholderScreen(title: "Конструктор практики")),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMenuItem(BuildContext context, String text, Widget screen) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => screen));
-      },
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
-
-/// СТРАНИЦА С КАРТОЧКАМИ АСАН
-class AsanaCardsScreen extends StatefulWidget {
-  const AsanaCardsScreen({super.key});
-
-  @override
-  State<AsanaCardsScreen> createState() => _AsanaCardsScreenState();
-}
-
-class _AsanaCardsScreenState extends State<AsanaCardsScreen> {
-  late Future<List<Asana>> asanas;
-
-  @override
-  void initState() {
-    super.initState();
-    asanas = loadAsanas();
-  }
 
   Future<List<Asana>> loadAsanas() async {
     final String response =
@@ -106,189 +37,241 @@ class _AsanaCardsScreenState extends State<AsanaCardsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Сурья Намаскар')),
-      body: FutureBuilder<List<Asana>>(
-        future: asanas,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Ошибка: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Нет данных'));
-          } else {
-            final items = snapshot.data!;
-            return PageView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final asana = items[index];
-                return Center(
-                  child: FlipCard(asana: asana),
+      body: Center(
+        child: FutureBuilder<List<Asana>>(
+          future: loadAsanas(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const CircularProgressIndicator();
+            }
+            return ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        QuizStartScreen(asanas: snapshot.data!),
+                  ),
                 );
               },
+              child: const Text("Начать тест"),
             );
-          }
-        },
+          },
+        ),
       ),
     );
   }
 }
 
-/// Виджет флип-карточки
-class FlipCard extends StatefulWidget {
-  final Asana asana;
-  const FlipCard({super.key, required this.asana});
+class QuizStartScreen extends StatefulWidget {
+  final List<Asana> asanas;
+
+  const QuizStartScreen({super.key, required this.asanas});
 
   @override
-  State<FlipCard> createState() => _FlipCardState();
+  State<QuizStartScreen> createState() => _QuizStartScreenState();
 }
 
-class _FlipCardState extends State<FlipCard> {
-  bool _showBack = false;
+class _QuizStartScreenState extends State<QuizStartScreen> {
+  int totalQuestions = 5;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return GestureDetector(
-      onTap: () => setState(() => _showBack = !_showBack),
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 500),
-        transitionBuilder: (child, animation) {
-          final rotate = Tween(begin: pi, end: 0.0).animate(animation);
-          return AnimatedBuilder(
-            animation: rotate,
-            builder: (context, child) {
-              final angle = _showBack ? rotate.value : -rotate.value;
-              return Transform(
-                transform: Matrix4.rotationY(angle),
-                alignment: Alignment.center,
-                child: child,
-              );
-            },
-            child: child,
-          );
-        },
-        child: _showBack ? _buildBack(size) : _buildFront(size),
-      ),
-    );
-  }
-
-  /// Передняя сторона карточки
-  Widget _buildFront(Size size) {
-    return Card(
-      elevation: 6,
-      margin: const EdgeInsets.all(16),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: size.height * 0.75,
-          maxWidth: 350,
-        ),
+    return Scaffold(
+      appBar: AppBar(title: const Text("Выберите количество вопросов")),
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: Image.network(
-                widget.asana.imageUrl,
-                fit: BoxFit.contain,
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Названия и подсказка
-            Column(
-              children: [
-                Text(
-                  widget.asana.nameSanskrit,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  widget.asana.nameRussian,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 6),
-                const Text(
-                  '(нажми, чтобы перевернуть)',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.black54,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+            DropdownButton<int>(
+              value: totalQuestions,
+              items: const [
+                DropdownMenuItem(value: 5, child: Text("5")),
+                DropdownMenuItem(value: 10, child: Text("10")),
+                DropdownMenuItem(value: 20, child: Text("20")),
               ],
+              onChanged: (val) {
+                setState(() {
+                  totalQuestions = val!;
+                });
+              },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                final String response =
+                    await rootBundle.loadString('assets/data/surya_namaskar.json');
+                final List<dynamic> data = json.decode(response);
+                final asanas = data.map((item) => Asana.fromJson(item)).toList();
+
+                if (!mounted) return;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => QuizScreen(
+                      asanas: asanas,
+                      totalQuestions: totalQuestions,
+                    ),
+                  ),
+                );
+              },
+              child: const Text("Начать тест"),
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  /// Задняя сторона карточки
-  Widget _buildBack(Size size) {
-    return Card(
-      elevation: 6,
-      margin: const EdgeInsets.all(16),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: size.height * 0.75,
-          maxWidth: 350,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (widget.asana.fact.isNotEmpty) ...[
-                  Text("Факт: ${widget.asana.fact}",
-                      style: const TextStyle(fontSize: 16)),
-                  const SizedBox(height: 8),
-                ],
-                if (widget.asana.technique.isNotEmpty) ...[
-                  Text("Техника: ${widget.asana.technique}",
-                      style: const TextStyle(fontSize: 16)),
-                  const SizedBox(height: 8),
-                ],
-                if (widget.asana.limitations != null &&
-                    widget.asana.limitations!.isNotEmpty)
-                  Text("Ограничения: ${widget.asana.limitations}",
-                      style: const TextStyle(fontSize: 16)),
-              ],
+class QuizScreen extends StatefulWidget {
+  final List<Asana> asanas;
+  final int totalQuestions;
+
+  const QuizScreen({
+    super.key,
+    required this.asanas,
+    required this.totalQuestions,
+  });
+
+  @override
+  State<QuizScreen> createState() => _QuizScreenState();
+}
+
+class _QuizScreenState extends State<QuizScreen> {
+  late List<Asana> quizAsanas;
+  int currentIndex = 0;
+  int score = 0;
+  String? selectedAnswer;
+
+  @override
+  void initState() {
+    super.initState();
+    quizAsanas = List.of(widget.asanas)..shuffle();
+    quizAsanas = quizAsanas.take(widget.totalQuestions).toList();
+  }
+
+  void checkAnswer(String answer) {
+    setState(() {
+      selectedAnswer = answer;
+      if (answer == quizAsanas[currentIndex].nameSanskrit) {
+        score++;
+      }
+    });
+
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
+      if (currentIndex < widget.totalQuestions - 1) {
+        setState(() {
+          currentIndex++;
+          selectedAnswer = null;
+        });
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                QuizResultScreen(score: score, total: widget.totalQuestions),
+          ),
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final asana = quizAsanas[currentIndex];
+
+    // собираем варианты: правильный + 3 случайных
+    List<String> options = [asana.nameSanskrit];
+    final wrongOptions = widget.asanas
+        .where((a) => a.nameSanskrit != asana.nameSanskrit)
+        .map((a) => a.nameSanskrit)
+        .toList()
+      ..shuffle(Random());
+
+    options.addAll(wrongOptions.take(3));
+    options.shuffle(Random());
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Вопрос ${currentIndex + 1}/${widget.totalQuestions}"),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image.network(asana.imageUrl, fit: BoxFit.contain),
             ),
           ),
-        ),
+          Expanded(
+            flex: 1,
+            child: ListView(
+              children: options.map((option) {
+                Color? color;
+                if (selectedAnswer != null) {
+                  if (option == asana.nameSanskrit) {
+                    color = Colors.green;
+                  } else if (option == selectedAnswer &&
+                      option != asana.nameSanskrit) {
+                    color = Colors.red;
+                  }
+                }
+                return Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: color ?? Colors.white,
+                      foregroundColor: Colors.black,
+                      side: const BorderSide(color: Colors.black12),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    onPressed: selectedAnswer == null
+                        ? () => checkAnswer(option)
+                        : null,
+                    child: Text(option, style: const TextStyle(fontSize: 16)),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
+class QuizResultScreen extends StatelessWidget {
+  final int score;
+  final int total;
 
-/// ЗАГЛУШКИ ДЛЯ ТЕСТА И КОНСТРУКТОРА
-class PlaceholderScreen extends StatelessWidget {
-  final String title;
-  const PlaceholderScreen({super.key, required this.title});
+  const QuizResultScreen({
+    super.key,
+    required this.score,
+    required this.total,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: const Center(
-        child: Text(
-          'Stay tuned!',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+      appBar: AppBar(title: const Text("Результат")),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Вы набрали $score из $total",
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Завершить"),
+            ),
+          ],
         ),
       ),
     );
